@@ -1,8 +1,8 @@
 
 REM change-me
-set pathdir=/d C:\........\Servergta
+set pathdir=/d C:\.........\Servergta
 REM change-me
-set startpath="Server" C:\...............\run.cmd +exec server.cfg
+set startpath="Server" C:\....\run.cmd +exec server.cfg
 
 :loop
 
