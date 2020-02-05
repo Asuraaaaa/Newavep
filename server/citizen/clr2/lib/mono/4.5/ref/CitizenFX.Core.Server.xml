@@ -27,6 +27,13 @@
             <param name="eventName">The name of the event.</param>
             <param name="args">Arguments to pass to the event.</param>
         </member>
+        <member name="M:CitizenFX.Core.BaseScript.TriggerLatentClientEvent(System.String,System.Int32,System.Object[])">
+            <summary>
+            Broadcasts an event to all connected players.
+            </summary>
+            <param name="eventName">The name of the event.</param>
+            <param name="args">Arguments to pass to the event.</param>
+        </member>
         <member name="T:CitizenFX.Core.FastStructure">
             <summary>
             Provides fast reading and writing of generic structures to a memory location using IL emitted functions.
@@ -6479,7 +6486,11 @@
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.CREATE_VEHICLE">
             <summary>
-            thisScriptCheck - can be destroyed if it belongs to the calling script.
+            thisScriptCheck - can be destroyed if it belongs to the calling script.  
+            ```
+            
+            ```
+            NativeDB Added Parameter 8: BOOL p7
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.DOES_PLAYER_OWN_SKU">
@@ -6489,8 +6500,22 @@
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.FREEZE_ENTITY_POSITION">
             <summary>
-            No, this should be called SET_ENTITY_KINEMATIC. It does more than just "freeze" it's position.  
+            ```
+            No, this should be called SET_ENTITY_KINEMATIC. It does more than just "freeze" it's position.
             ^Rockstar Devs named it like that, Now cry about it.
+            ```
+            
+            Freezes or unfreezes an entity preventing its coordinates to change by the player if set to `true`. You can still change the entity position using SET_ENTITY_COORDS.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.GET_ALL_VEHICLES">
+            <summary>
+            Returns all vehicle handles known to the server.
+            The data returned adheres to the following layout:
+            
+            ```
+            [127, 42, 13, 37]
+            ```
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.GET_CONSOLE_BUFFER">
@@ -6501,6 +6526,21 @@
         <member name="F:CitizenFX.Core.Native.Hash.GET_CURRENT_RESOURCE_NAME">
             <summary>
             Returns the name of the currently executing resource.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.GET_ENTITY_COORDS">
+            <summary>
+            Gets the current coordinates for a specified entity. This native is used server side when using OneSync. See &lt;a href="#_0x3FEF770D40960D5A" &gt;GET_ENTITY_COORDS&lt;/a&gt; for client side.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.GET_ENTITY_HEALTH">
+            <summary>
+            Currently it only works with peds.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.GET_ENTITY_MAX_HEALTH">
+            <summary>
+            Currently it only works with peds.
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.GET_GAME_TIMER">
@@ -6566,8 +6606,8 @@
                 LockedForPlayer = 3,
                 StickPlayerInside = 4, -- Doesn't allow players to exit the vehicle with the exit vehicle key.
                 CanBeBrokenInto = 7, -- Can be broken into the car. If the glass is broken, the value will be set to 1
-                CanBeBrokenIntoPersist = 8,
-                CannotBeTriedToEnter = 10
+                CanBeBrokenIntoPersist = 8, -- Can be broken into persist
+                CannotBeTriedToEnter = 10, -- Cannot be tried to enter (Nothing happens when you press the vehicle enter key).
             }
             </summary>
         </member>
@@ -6596,6 +6636,21 @@
         <member name="F:CitizenFX.Core.Native.Hash.NETWORK_GET_ENTITY_OWNER">
             <summary>
             Returns the owner ID of the specified entity.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.PROFILER_ENTER_SCOPE">
+            <summary>
+            Scope entry for profiler.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.PROFILER_EXIT_SCOPE">
+            <summary>
+            Scope exit for profiler.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.PROFILER_IS_RECORDING">
+            <summary>
+            Returns true if the profiler is active.
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.REGISTER_COMMAND">
@@ -6664,9 +6719,18 @@
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.SET_ENTITY_COORDS">
             <summary>
-            p7 is always 1 in the scripts. Set to 1, an area around the destination coords for the moved entity is cleared from other entities.   
-            Often ends with 1, 0, 0, 1); in the scripts. It works.   
+            ```
+            p7 is always 1 in the scripts. Set to 1, an area around the destination coords for the moved entity is cleared from other entities.
+            Often ends with 1, 0, 0, 1); in the scripts. It works.
             Axis - Invert Axis Flags
+            ```
+            
+            Sets an entity's coordinates in world space.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.SET_ENTITY_HEADING">
+            <summary>
+            Set the heading of an entity in degrees also known as "Yaw".
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.SET_ENTITY_ROTATION">
@@ -6721,6 +6785,11 @@
             The backing function for TriggerEvent.
             </summary>
         </member>
+        <member name="F:CitizenFX.Core.Native.Hash.TRIGGER_LATENT_CLIENT_EVENT_INTERNAL">
+            <summary>
+            The backing function for TriggerLatentClientEvent.
+            </summary>
+        </member>
         <member name="F:CitizenFX.Core.Native.Hash.WAS_EVENT_CANCELED">
             <summary>
             Returns whether or not the currently executing event was canceled.
@@ -6730,8 +6799,12 @@
             <summary>
             Returns whether or not the specified player has enough information to start a commerce session for.
             </summary>
-            <param name="playerSrc">The player handle</param>
-            <returns>True or false.</returns>
+            <param name="playerSrc">
+            The player handle
+            </param>
+            <returns>
+            True or false.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.CancelEvent">
             <summary>
@@ -6741,39 +6814,96 @@
         <member name="M:CitizenFX.Core.Native.API.CreateVehicle(System.UInt32,System.Single,System.Single,System.Single,System.Single,System.Boolean,System.Boolean)">
             <summary>
             thisScriptCheck - can be destroyed if it belongs to the calling script.
+            ```
+            ```
+            NativeDB Added Parameter 8: BOOL p7
             </summary>
         </member>
         <member name="M:CitizenFX.Core.Native.API.DoesPlayerOwnSku(System.String,System.Int32)">
             <summary>
             Requests whether or not the player owns the specified SKU.
             </summary>
-            <param name="playerSrc">The player handle</param>
-            <param name="skuId">The ID of the SKU.</param>
-            <returns>A boolean.</returns>
+            <param name="playerSrc">
+            The player handle
+            </param>
+            <param name="skuId">
+            The ID of the SKU.
+            </param>
+            <returns>
+            A boolean.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.FreezeEntityPosition(System.Int32,System.Boolean)">
             <summary>
+            ```
             No, this should be called SET_ENTITY_KINEMATIC. It does more than just "freeze" it's position.
             ^Rockstar Devs named it like that, Now cry about it.
+            ```
+            Freezes or unfreezes an entity preventing its coordinates to change by the player if set to `true`. You can still change the entity position using SET_ENTITY_COORDS.
             </summary>
+            <param name="entity">
+            The entity to freeze/unfreeze.
+            </param>
+            <param name="toggle">
+            Freeze or unfreeze entity.
+            </param>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.GetAllVehicles">
+            <summary>
+            Returns all vehicle handles known to the server.
+            The data returned adheres to the following layout:
+            ```
+            [127, 42, 13, 37]
+            ```
+            </summary>
+            <returns>
+            An object containing a list of vehicle handles.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetConsoleBuffer">
             <summary>
             Returns the current console output buffer.
             </summary>
-            <returns>The most recent game console output, as a string.</returns>
+            <returns>
+            The most recent game console output, as a string.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetCurrentResourceName">
             <summary>
             Returns the name of the currently executing resource.
             </summary>
-            <returns>The name of the resource.</returns>
+            <returns>
+            The name of the resource.
+            </returns>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.GetEntityCoords(System.Int32)">
+            <summary>
+            Gets the current coordinates for a specified entity. This native is used server side when using OneSync. See &lt;a href="#_0x3FEF770D40960D5A" &gt;GET_ENTITY_COORDS&lt;/a&gt; for client side.
+            </summary>
+            <param name="entity">
+            The entity to get the coordinates from.
+            </param>
+            <returns>
+            The current entity coordinates.
+            </returns>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.GetEntityHealth(System.Int32)">
+            <summary>
+            Currently it only works with peds.
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.GetEntityMaxHealth(System.Int32)">
+            <summary>
+            Currently it only works with peds.
+            </summary>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetGameTimer">
             <summary>
             Gets the current game timer in milliseconds.
             </summary>
-            <returns>The game time.</returns>
+            <returns>
+            The game time.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetHashKey(System.String)">
             <summary>
@@ -6785,8 +6915,12 @@
             Gets the amount of metadata values with the specified key existing in the specified resource's manifest.
             See also: [Resource manifest](https://docs.fivem.net/resources/manifest/)
             </summary>
-            <param name="resourceName">The resource name.</param>
-            <param name="metadataKey">The key to look up in the resource manifest.</param>
+            <param name="resourceName">
+            The resource name.
+            </param>
+            <param name="metadataKey">
+            The key to look up in the resource manifest.
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetRegisteredCommands">
             <summary>
@@ -6803,30 +6937,46 @@
             ]
             ```
             </summary>
-            <returns>An object containing registered commands.</returns>
+            <returns>
+            An object containing registered commands.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetResourceMetadata(System.String,System.String,System.Int32)">
             <summary>
             Gets the metadata value at a specified key/index from a resource's manifest.
             See also: [Resource manifest](https://docs.fivem.net/resources/manifest/)
             </summary>
-            <param name="resourceName">The resource name.</param>
-            <param name="metadataKey">The key in the resource manifest.</param>
-            <param name="index">The value index, in a range from [0..GET_NUM_RESOURCE_METDATA-1].</param>
+            <param name="resourceName">
+            The resource name.
+            </param>
+            <param name="metadataKey">
+            The key in the resource manifest.
+            </param>
+            <param name="index">
+            The value index, in a range from [0..GET_NUM_RESOURCE_METDATA-1].
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetResourcePath(System.String)">
             <summary>
             Returns the physical on-disk path of the specified resource.
             </summary>
-            <param name="resourceName">The name of the resource.</param>
-            <returns>The resource directory name, possibly without trailing slash.</returns>
+            <param name="resourceName">
+            The name of the resource.
+            </param>
+            <returns>
+            The resource directory name, possibly without trailing slash.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetResourceState(System.String)">
             <summary>
             Returns the current state of the specified resource.
             </summary>
-            <param name="resourceName">The name of the resource.</param>
-            <returns>The resource state. One of `"missing", "started", "starting", "stopped", "stopping", "uninitialized" or "unknown"`.</returns>
+            <param name="resourceName">
+            The name of the resource.
+            </param>
+            <returns>
+            The resource state. One of `"missing", "started", "starting", "stopped", "stopping", "uninitialized" or "unknown"`.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetVehicleDoorLockStatus(System.Int32)">
             <summary>
@@ -6837,8 +6987,8 @@
             LockedForPlayer = 3,
             StickPlayerInside = 4, -- Doesn't allow players to exit the vehicle with the exit vehicle key.
             CanBeBrokenInto = 7, -- Can be broken into the car. If the glass is broken, the value will be set to 1
-            CanBeBrokenIntoPersist = 8,
-            CannotBeTriedToEnter = 10
+            CanBeBrokenIntoPersist = 8, -- Can be broken into persist
+            CannotBeTriedToEnter = 10, -- Cannot be tried to enter (Nothing happens when you press the vehicle enter key).
             }
             </summary>
         </member>
@@ -6851,20 +7001,28 @@
             <summary>
             Gets whether or not this is the CitizenFX server.
             </summary>
-            <returns>A boolean value.</returns>
+            <returns>
+            A boolean value.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.IsPlayerCommerceInfoLoaded(System.String)">
             <summary>
             Requests whether or not the commerce data for the specified player has loaded.
             </summary>
-            <param name="playerSrc">The player handle</param>
-            <returns>A boolean.</returns>
+            <param name="playerSrc">
+            The player handle
+            </param>
+            <returns>
+            A boolean.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.LoadPlayerCommerceData(System.String)">
             <summary>
             Requests the commerce data for the specified player, including the owned SKUs. Use `IS_PLAYER_COMMERCE_INFO_LOADED` to check if it has loaded.
             </summary>
-            <param name="playerSrc">The player handle</param>
+            <param name="playerSrc">
+            The player handle
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.LoadResourceFile(System.String,System.String)">
             <summary>
@@ -6872,16 +7030,47 @@
             If executed on the client, this file has to be included in `files` in the resource manifest.
             Example: `local data = LoadResourceFile("devtools", "data.json")`
             </summary>
-            <param name="resourceName">The resource name.</param>
-            <param name="fileName">The file in the resource.</param>
-            <returns>The file contents</returns>
+            <param name="resourceName">
+            The resource name.
+            </param>
+            <param name="fileName">
+            The file in the resource.
+            </param>
+            <returns>
+            The file contents
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.NetworkGetEntityOwner(System.Int32)">
             <summary>
             Returns the owner ID of the specified entity.
             </summary>
-            <param name="entity">The entity to get the owner for.</param>
-            <returns>On the server, the server ID of the entity owner. On the client, returns the player/slot ID of the entity owner.</returns>
+            <param name="entity">
+            The entity to get the owner for.
+            </param>
+            <returns>
+            On the server, the server ID of the entity owner. On the client, returns the player/slot ID of the entity owner.
+            </returns>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.ProfilerEnterScope(System.String)">
+            <summary>
+            Scope entry for profiler.
+            </summary>
+            <param name="scopeName">
+            Scope name.
+            </param>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.ProfilerExitScope">
+            <summary>
+            Scope exit for profiler.
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.ProfilerIsRecording">
+            <summary>
+            Returns true if the profiler is active.
+            </summary>
+            <returns>
+            True or false.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.RegisterCommand(System.String,CitizenFX.Core.Native.InputArgument,System.Boolean)">
             <summary>
@@ -6891,30 +7080,46 @@
             **Example result**:
             ![](https://i.imgur.com/TaCnG09.png)
             </summary>
-            <param name="commandName">The command you want to register.</param>
-            <param name="handler">A handler function that gets called whenever the command is executed.</param>
-            <param name="restricted">If this is a server command and you set this to true, then players will need the command.yourCommandName ace permission to execute this command.</param>
+            <param name="commandName">
+            The command you want to register.
+            </param>
+            <param name="handler">
+            A handler function that gets called whenever the command is executed.
+            </param>
+            <param name="restricted">
+            If this is a server command and you set this to true, then players will need the command.yourCommandName ace permission to execute this command.
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.RegisterConsoleListener(CitizenFX.Core.Native.InputArgument)">
             <summary>
             Registers a listener for console output messages.
             </summary>
-            <param name="listener">A function of `(channel: string, message: string) =&gt; void`. The message might contain `\n`.</param>
+            <param name="listener">
+            A function of `(channel: string, message: string) =&gt; void`. The message might contain `\n`.
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.RegisterResourceAsEventHandler(System.String)">
             <summary>
             An internal function which allows the current resource's HLL script runtimes to receive state for the specified event.
             </summary>
-            <param name="eventName">An event name, or "\*" to disable HLL event filtering for this resource.</param>
+            <param name="eventName">
+            An event name, or "\*" to disable HLL event filtering for this resource.
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.RegisterResourceAsset(System.String,System.String)">
             <summary>
             **Experimental**: This native may be altered or removed in future versions of CitizenFX without warning.
             Registers a cached resource asset with the resource system, similar to the automatic scanning of the `stream/` folder.
             </summary>
-            <param name="resourceName">The resource to add the asset to.</param>
-            <param name="fileName">A file name in the resource.</param>
-            <returns>A cache string to pass to `REGISTER_STREAMING_FILE_FROM_CACHE` on the client.</returns>
+            <param name="resourceName">
+            The resource to add the asset to.
+            </param>
+            <param name="fileName">
+            A file name in the resource.
+            </param>
+            <returns>
+            A cache string to pass to `REGISTER_STREAMING_FILE_FROM_CACHE` on the client.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.RegisterResourceBuildTaskFactory(System.String,CitizenFX.Core.Native.InputArgument)">
             <summary>
@@ -6930,40 +7135,98 @@
             }
             ```
             </summary>
-            <param name="factoryId">The identifier for the build task.</param>
-            <param name="factoryFn">The factory function.</param>
+            <param name="factoryId">
+            The identifier for the build task.
+            </param>
+            <param name="factoryFn">
+            The factory function.
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.RequestPlayerCommerceSession(System.String,System.Int32)">
             <summary>
             Requests the specified player to buy the passed SKU. This'll pop up a prompt on the client, which upon acceptance
             will open the browser prompting further purchase details.
             </summary>
-            <param name="playerSrc">The player handle</param>
-            <param name="skuId">The ID of the SKU.</param>
+            <param name="playerSrc">
+            The player handle
+            </param>
+            <param name="skuId">
+            The ID of the SKU.
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SaveResourceFile(System.String,System.String,System.String,System.Int32)">
             <summary>
             Writes the specified data to a file in the specified resource.
             Using a length of `-1` will automatically detect the length assuming the data is a C string.
             </summary>
-            <param name="resourceName">The name of the resource.</param>
-            <param name="fileName">The name of the file.</param>
-            <param name="data">The data to write to the file.</param>
-            <param name="dataLength">The length of the written data.</param>
-            <returns>A value indicating if the write succeeded.</returns>
+            <param name="resourceName">
+            The name of the resource.
+            </param>
+            <param name="fileName">
+            The name of the file.
+            </param>
+            <param name="data">
+            The data to write to the file.
+            </param>
+            <param name="dataLength">
+            The length of the written data.
+            </param>
+            <returns>
+            A value indicating if the write succeeded.
+            </returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.ScheduleResourceTick(System.String)">
             <summary>
             Schedules the specified resource to run a tick as soon as possible, bypassing the server's fixed tick rate.
             </summary>
-            <param name="resourceName">The resource to tick.</param>
+            <param name="resourceName">
+            The resource to tick.
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetEntityCoords(System.Int32,System.Single,System.Single,System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
+            ```
             p7 is always 1 in the scripts. Set to 1, an area around the destination coords for the moved entity is cleared from other entities.
             Often ends with 1, 0, 0, 1); in the scripts. It works.
             Axis - Invert Axis Flags
+            ```
+            Sets an entity's coordinates in world space.
             </summary>
+            <param name="entity">
+            The entity to change coordinates for.
+            </param>
+            <param name="xPos">
+            The x coordinate.
+            </param>
+            <param name="yPos">
+            The y coordinate.
+            </param>
+            <param name="zPos">
+            The z coordinate.
+            </param>
+            <param name="xAxis">
+            Whether to invert x axis.
+            </param>
+            <param name="yAxis">
+            Whether to invert y axis.
+            </param>
+            <param name="zAxis">
+            Whether to invert z axis.
+            </param>
+            <param name="clearArea">
+            Whether to clear other entities in area around entity.
+            </param>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.SetEntityHeading(System.Int32,System.Single)">
+            <summary>
+            Set the heading of an entity in degrees also known as "Yaw".
+            </summary>
+            <param name="entity">
+            The entity to set the heading for.
+            </param>
+            <param name="heading">
+            The heading in degrees.
+            </param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetEntityRotation(System.Int32,System.Single,System.Single,System.Single,System.Int32,System.Boolean)">
             <summary>
@@ -7017,11 +7280,18 @@
             The backing function for TriggerEvent.
             </summary>
         </member>
+        <member name="M:CitizenFX.Core.Native.API.TriggerLatentClientEventInternal(System.String,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            The backing function for TriggerLatentClientEvent.
+            </summary>
+        </member>
         <member name="M:CitizenFX.Core.Native.API.WasEventCanceled">
             <summary>
             Returns whether or not the currently executing event was canceled.
             </summary>
-            <returns>A boolean.</returns>
+            <returns>
+            A boolean.
+            </returns>
         </member>
         <member name="P:CitizenFX.Core.Entity.Position">
             <summary>
